@@ -1,11 +1,16 @@
 import { NewsArticleSkeleton } from "@/types/contentful";
 import { Document } from "@contentful/rich-text-types";
 import { createClient } from "contentful";
+import { draftMode } from "next/headers";
 
-export const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID!,
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
-});
+export const createContentfulClient = (preview: boolean) => {
+  return createClient({
+    space: process.env.CONTENTFUL_SPACE_ID!,
+    accessToken: preview
+      ? process.env.CONTENTFUL_PREVIEW_TOKEN!
+      : process.env.CONTENTFUL_ACCESS_TOKEN!,
+  });
+};
 
 export interface NewsArticle {
   title: string;
@@ -20,6 +25,9 @@ export interface NewsArticle {
 }
 
 export async function getNewsArticles(): Promise<NewsArticle[]> {
+  const { isEnabled } = await draftMode();
+  const client = createContentfulClient(isEnabled);
+
   const response =
     await client.withoutUnresolvableLinks.getEntries<NewsArticleSkeleton>({
       content_type: "newsArticle",
@@ -42,6 +50,9 @@ export async function getNewsArticles(): Promise<NewsArticle[]> {
 export async function getNewsArticleBySlug(
   slug: string
 ): Promise<NewsArticle | null> {
+  const { isEnabled } = await draftMode();
+  const client = createContentfulClient(isEnabled);
+
   const response =
     await client.withoutUnresolvableLinks.getEntries<NewsArticleSkeleton>({
       content_type: "newsArticle",
