@@ -17,6 +17,7 @@ export function NewsCard({ article }: { article: NewsArticle }) {
     <Card className="overflow-hidden">
       <div className="relative h-48">
         <Image
+          priority
           src={`https:${article?.featuredImage?.file ?? ""}`}
           alt={article?.featuredImage?.description ?? "Image of the article"}
           fill
@@ -35,7 +36,9 @@ export function NewsCard({ article }: { article: NewsArticle }) {
           {new Date(article.publishDate).toLocaleDateString()}
         </Badge>
         <Button asChild>
-          <Link href={`/article/${article.slug}`}>Read more</Link>
+          <Link prefetch={true} href={`/article/${article.slug}`}>
+            Read more
+          </Link>
         </Button>
       </CardFooter>
     </Card>
