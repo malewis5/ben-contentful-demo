@@ -3,7 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["images.ctfassets.net"],
+    remotePatterns: [
+      {
+        hostname: "images.ctfassets.net",
+        protocol: "https",
+      },
+    ],
   },
 };
 

@@ -3,6 +3,7 @@ import { NewsCard } from "@/components/news-card";
 
 export default async function Home() {
   const articles = await getNewsArticles();
+  console.log(articles[0].featuredImage);
 
   return (
     <div className="min-h-screen bg-background">

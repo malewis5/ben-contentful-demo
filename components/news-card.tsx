@@ -17,7 +17,7 @@ export function NewsCard({ article }: { article: NewsArticle }) {
     <Card className="overflow-hidden">
       <div className="relative h-48">
         <Image
-          src={`https:${article?.featuredImage?.url ?? ""}`}
+          src={`https:${article?.featuredImage?.file ?? ""}`}
           alt={article?.featuredImage?.description ?? "Image of the article"}
           fill
           className="object-cover"
