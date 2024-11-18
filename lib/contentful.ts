@@ -28,6 +28,8 @@ export interface NewsArticle {
 
 export async function getNewsArticles(): Promise<NewsArticle[]> {
   "use cache";
+  cacheTag("newsArticle");
+
   const { isEnabled } = await draftMode();
   const client = createContentfulClient(isEnabled);
 
