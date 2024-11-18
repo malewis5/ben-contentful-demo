@@ -1,6 +1,7 @@
 import { NewsArticleSkeleton } from "@/types/contentful";
 import { Document } from "@contentful/rich-text-types";
 import { createClient } from "contentful";
+import { unstable_cacheTag as cacheTag } from "next/cache";
 import { draftMode } from "next/headers";
 
 export const createContentfulClient = (preview: boolean) => {
@@ -26,6 +27,7 @@ export interface NewsArticle {
 }
 
 export async function getNewsArticles(): Promise<NewsArticle[]> {
+  "use cache";
   const { isEnabled } = await draftMode();
   const client = createContentfulClient(isEnabled);
 
@@ -51,6 +53,8 @@ export async function getNewsArticles(): Promise<NewsArticle[]> {
 export async function getNewsArticleBySlug(
   slug: string
 ): Promise<NewsArticle | null> {
+  "use cache";
+  cacheTag("newsArticle", slug);
   const { isEnabled } = await draftMode();
   const client = createContentfulClient(isEnabled);
 
