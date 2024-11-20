@@ -4,6 +4,7 @@ import { getNewsArticleBySlug } from "@/lib/contentful";
 import { RichTextRenderer } from "@/components/ui/rich-text";
 import { ChevronLeft, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { unstable_cache } from "next/cache";
 
 function getReadingTime(content: string): number {
   const wordsPerMinute = 200;
@@ -11,13 +12,24 @@ function getReadingTime(content: string): number {
   return Math.ceil(words / wordsPerMinute);
 }
 
+export const dynamic = "force-static";
+
 export default async function ArticlePage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = await getNewsArticleBySlug(slug);
+
+  const getCachedArticle = unstable_cache(
+    async (slug: string) => {
+      return await getNewsArticleBySlug(slug);
+    },
+    ["newsArticle"],
+    { revalidate: 60, tags: ["newsArticle", slug] }
+  );
+
+  const article = await getCachedArticle(slug);
 
   if (!article) {
     notFound();
