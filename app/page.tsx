@@ -1,8 +1,17 @@
 import { getNewsArticles } from "@/lib/contentful";
 import { NewsCard } from "@/components/news-card";
+import { unstable_cache } from "next/cache";
+
+const getCachedArticles = unstable_cache(
+  async () => {
+    return await getNewsArticles();
+  },
+  ["newsArticle"],
+  { revalidate: 60, tags: ["newsArticle"] }
+);
 
 export default async function Home() {
-  const articles = await getNewsArticles();
+  const articles = await getCachedArticles();
 
   return (
     <div className="min-h-screen bg-background">
