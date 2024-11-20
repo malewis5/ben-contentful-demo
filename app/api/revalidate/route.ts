@@ -12,7 +12,7 @@ export const POST = async () => {
       return response;
     }
 
-    revalidateTag("articles");
+    revalidateTag("newsArticle");
     const response = new Response("success", { status: 200 });
     console.log("Revalidation triggered for articles");
     return response;
